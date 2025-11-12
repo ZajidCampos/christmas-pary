@@ -2,12 +2,14 @@
 
 import { useState } from 'react';
 import { RSVPFormData } from '../../domain/entities/Ticket';
+import { FirebaseService } from '../../data/services/FirebaseService';
 
 interface RSVPFormProps {
   accommodationAvailable: number;
+  onSubmitSuccess?: () => void;
 }
 
-export default function RSVPForm({ accommodationAvailable }: RSVPFormProps) {
+export default function RSVPForm({ accommodationAvailable, onSubmitSuccess }: RSVPFormProps) {
   const [formData, setFormData] = useState<RSVPFormData>({
     name: '',
     email: '',
@@ -21,17 +23,41 @@ export default function RSVPForm({ accommodationAvailable }: RSVPFormProps) {
 
   const [submitted, setSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState<string>('');
+
+  const firebaseService = new FirebaseService();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
+    setError('');
 
-    // Simulación de envío - aquí conectarás con tu backend
-    await new Promise(resolve => setTimeout(resolve, 1500));
+    try {
+      // Verificar si el email ya está registrado
+      const emailExists = await firebaseService.checkEmailExists(formData.email);
+      
+      if (emailExists) {
+        setError('Este email ya está registrado. Si necesitas modificar tu RSVP, contáctanos.');
+        setIsSubmitting(false);
+        return;
+      }
 
-    console.log('RSVP Data:', formData);
-    setSubmitted(true);
-    setIsSubmitting(false);
+      // Guardar RSVP en Firebase
+      const rsvpId = await firebaseService.saveRSVP(formData);
+      console.log('RSVP guardado exitosamente con ID:', rsvpId);
+      
+      setSubmitted(true);
+      
+      // Llamar al callback para actualizar las estadísticas
+      if (onSubmitSuccess) {
+        onSubmitSuccess();
+      }
+    } catch (err) {
+      console.error('Error al enviar RSVP:', err);
+      setError('Hubo un error al procesar tu confirmación. Por favor intenta de nuevo.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
@@ -100,8 +126,9 @@ export default function RSVPForm({ accommodationAvailable }: RSVPFormProps) {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="max-w-2xl mx-auto space-y-6 px-4">
-      <div className="grid md:grid-cols-2 gap-6">
+    <div className="max-w-2xl mx-auto px-4">
+      <form onSubmit={handleSubmit} className="p-6 md:p-8 bg-zinc-900/50 backdrop-blur-sm border-2 border-cyan-500/20 rounded-2xl space-y-6">
+        <div className="grid md:grid-cols-2 gap-6">
         {/* Nombre */}
         <div>
           <label htmlFor="name" className="block text-cyan-400 font-mono text-sm mb-2">
@@ -193,7 +220,7 @@ export default function RSVPForm({ accommodationAvailable }: RSVPFormProps) {
               🏠 Necesito hospedaje
             </label>
             <p className="text-zinc-300 text-sm mb-2">
-              ¿Vienes de otra ciudad? Puedes quedarte en mi casa. Hay espacio para {accommodationAvailable} personas.
+              ¿Vienes de otra ciudad? Puedes quedarte en mi casa. Actualmente tenemos: {accommodationAvailable} espacios disponibles.
             </p>
             {formData.needsAccommodation && (
               <div className="mt-3 p-3 bg-cyan-900/20 border border-cyan-500/30 rounded-lg">
@@ -267,6 +294,16 @@ export default function RSVPForm({ accommodationAvailable }: RSVPFormProps) {
         />
       </div>
 
+      {/* Error message */}
+      {error && (
+        <div className="p-4 bg-red-900/20 border-2 border-red-500/50 rounded-xl">
+          <p className="text-red-400 font-mono text-sm flex items-center gap-2">
+            <span>⚠️</span>
+            {error}
+          </p>
+        </div>
+      )}
+
       {/* Submit */}
       <button
         type="submit"
@@ -290,6 +327,7 @@ export default function RSVPForm({ accommodationAvailable }: RSVPFormProps) {
       <p className="text-zinc-400 text-center text-sm font-mono">
         * Campos obligatorios | 🔒 Tu información está segura
       </p>
-    </form>
+      </form>
+    </div>
   );
 }

@@ -1,13 +1,49 @@
+'use client';
+
+import { useState, useEffect } from 'react';
 import RSVPForm from './RSVPForm';
 import { AttendeeInfo } from '../../domain/entities/AttendeeInfo';
+import { FirebaseService } from '../../data/services/FirebaseService';
 
 interface RSVPSectionProps {
   attendeeInfo: AttendeeInfo;
 }
 
 export default function RSVPSection({ attendeeInfo }: RSVPSectionProps) {
-  const availableSpots = attendeeInfo.capacity - attendeeInfo.confirmed;
-  const percentageFilled = (attendeeInfo.confirmed / attendeeInfo.capacity) * 100;
+  const [stats, setStats] = useState({
+    confirmed: attendeeInfo.confirmed,
+    accommodationAvailable: attendeeInfo.accommodationAvailable,
+    totalGuests: attendeeInfo.confirmed,
+  });
+  const [loading, setLoading] = useState(true);
+
+  const firebaseService = new FirebaseService();
+
+  useEffect(() => {
+    loadStats();
+  }, []);
+
+  const loadStats = async () => {
+    try {
+      const firebaseStats = await firebaseService.getRSVPStats();
+      
+      // Calcular espacios de hospedaje disponibles
+      const accommodationAvailable = Math.max(0, 8 - firebaseStats.needingAccommodation);
+      
+      setStats({
+        confirmed: firebaseStats.total,
+        accommodationAvailable,
+        totalGuests: firebaseStats.totalGuests,
+      });
+    } catch (error) {
+      console.error('Error al cargar estadísticas:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const availableSpots = attendeeInfo.capacity - stats.totalGuests;
+  const percentageFilled = (stats.totalGuests / attendeeInfo.capacity) * 100;
 
   return (
     <section id="rsvp" className="py-24 bg-gradient-to-b from-black via-cyan-950/10 to-black relative overflow-hidden">
@@ -30,27 +66,27 @@ export default function RSVPSection({ attendeeInfo }: RSVPSectionProps) {
 
           {/* Stats */}
           <div className="flex flex-wrap justify-center gap-6 mb-8">
-            <div className="px-6 py-4 bg-black/50 border-2 border-cyan-500/30">
+            <div className="px-6 py-4 bg-black/50 border-2 border-cyan-500/30 rounded-xl">
               <div className="text-3xl font-black text-cyan-400 mb-1">
-                {attendeeInfo.confirmed}
+                {loading ? '...' : stats.confirmed}
               </div>
               <div className="text-gray-400 text-sm font-mono">
                 CONFIRMADOS
               </div>
             </div>
 
-            <div className="px-6 py-4 bg-black/50 border-2 border-purple-500/30">
+            <div className="px-6 py-4 bg-black/50 border-2 border-purple-500/30 rounded-xl">
               <div className="text-3xl font-black text-purple-400 mb-1">
-                {availableSpots}
+                {loading ? '...' : availableSpots}
               </div>
               <div className="text-gray-400 text-sm font-mono">
                 LUGARES DISPONIBLES
               </div>
             </div>
 
-            <div className="px-6 py-4 bg-black/50 border-2 border-pink-500/30">
+            <div className="px-6 py-4 bg-black/50 border-2 border-pink-500/30 rounded-xl">
               <div className="text-3xl font-black text-pink-400 mb-1">
-                {attendeeInfo.accommodationAvailable}
+                {loading ? '...' : stats.accommodationAvailable}
               </div>
               <div className="text-gray-400 text-sm font-mono">
                 ESPACIOS DE HOSPEDAJE
@@ -67,13 +103,16 @@ export default function RSVPSection({ attendeeInfo }: RSVPSectionProps) {
               ></div>
             </div>
             <p className="text-gray-400 text-sm font-mono mt-2">
-              {percentageFilled.toFixed(0)}% del aforo confirmado
+              {percentageFilled.toFixed(0)}% de invitados confirmados
             </p>
           </div>
         </div>
 
         {/* Form */}
-        <RSVPForm accommodationAvailable={attendeeInfo.accommodationAvailable} />
+        <RSVPForm 
+          accommodationAvailable={stats.accommodationAvailable} 
+          onSubmitSuccess={loadStats}
+        />
 
         {/* Additional info */}
         <div className="mt-16 max-w-4xl mx-auto">

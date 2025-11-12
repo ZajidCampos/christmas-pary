@@ -75,7 +75,7 @@ export class EventRepository {
     return {
       confirmed: 8,
       capacity: 30,
-      accommodationAvailable: 5,
+      accommodationAvailable: 8,
     };
   }
 }

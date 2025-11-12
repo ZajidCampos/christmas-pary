@@ -3,72 +3,78 @@ interface FeaturesProps {}
 export default function Features({}: FeaturesProps) {
   const features = [
     {
-      icon: '�',
-      title: '100% GRATIS',
-      description: 'Entrada totalmente gratuita. Solo confirma tu asistencia y disfruta',
-      color: 'cyan',
-    },
-    {
-      icon: '�',
-      title: 'TECHNO DURO',
-      description: 'Los mejores DJs locales e internacionales con sets de techno puro',
-      color: 'purple',
-    },
-    {
       icon: '🎄',
-      title: 'POSADA MEXICANA',
-      description: 'Piñata, ponche navideño y tradiciones con un twist electrónico',
-      color: 'pink',
+      title: 'PONCHE Y PIÑATA',
+      description: 'Tradición mexicana con ponche navideño caliente y piñata llena de sorpresas',
+      color: 'cyan',
+      gradient: 'from-cyan-500/10 to-cyan-500/5',
     },
     {
-      icon: '�',
-      title: 'HOSPEDAJE',
-      description: '¿Vienes de fuera? Puedes quedarte en casa del host',
+      icon: '🌿',
+      title: 'CONCURSO DE PORROS',
+      description: 'Competencia del mejor forjador de porros. Premios para el más creativo',
+      color: 'purple',
+      gradient: 'from-purple-500/10 to-purple-500/5',
+    },
+    {
+      icon: '🎵',
+      title: 'TECHNO CON DJ LOCAL',
+      description: 'Sets de techno puro con los mejores DJs de la escena local',
+      color: 'pink',
+      gradient: 'from-pink-500/10 to-pink-500/5',
+    },
+    {
+      icon: '🏠',
+      title: 'HOSPEDAJE GRATIS',
+      description: 'Para personas de otra ciudad. Cupo limitado para 8 personas',
       color: 'cyan',
+      gradient: 'from-cyan-500/10 to-cyan-500/5',
     },
   ];
 
   return (
-    <section className="py-24 bg-black relative overflow-hidden">
+    <section className="py-16 md:py-24 bg-zinc-950 relative overflow-hidden">
       {/* Background effects */}
-      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-purple-900/10 to-transparent"></div>
+      <div className="absolute inset-0 opacity-30">
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-purple-500 rounded-full blur-[150px]"></div>
+      </div>
 
       <div className="container mx-auto px-4 relative z-10">
-        <div className="text-center mb-16">
-          <h2 className="text-5xl md:text-6xl font-black mb-4">
+        <div className="text-center mb-12 md:mb-16">
+          <h2 className="text-4xl md:text-5xl lg:text-6xl font-black mb-4">
             <span className="bg-gradient-to-r from-cyan-400 to-purple-400 bg-clip-text text-transparent">
               LA EXPERIENCIA
             </span>
           </h2>
-          <p className="text-gray-400 text-lg font-mono">
+          <p className="text-zinc-400 text-base md:text-lg font-mono">
             ▸ UNA NOCHE INOLVIDABLE
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 max-w-7xl mx-auto">
           {features.map((feature, index) => (
             <div
               key={index}
-              className="group relative p-8 bg-black/50 border-2 border-cyan-500/20 hover:border-cyan-400 transition-all duration-300 hover:scale-105"
+              className="group relative p-6 md:p-8 bg-zinc-900/50 backdrop-blur-sm border-2 border-zinc-800 hover:border-cyan-500/50 transition-all duration-300 hover:scale-105 rounded-2xl overflow-hidden"
             >
-              {/* Glow effect on hover */}
-              <div className={`absolute inset-0 bg-gradient-to-br from-${feature.color}-500/0 to-${feature.color}-500/0 group-hover:from-${feature.color}-500/10 group-hover:to-transparent transition-all duration-300`}></div>
+              {/* Gradient background */}
+              <div className={`absolute inset-0 bg-gradient-to-br ${feature.gradient} opacity-0 group-hover:opacity-100 transition-opacity duration-300`}></div>
 
               <div className="relative z-10">
-                <div className="text-6xl mb-4 transform group-hover:scale-110 transition-transform">
+                <div className="text-5xl md:text-6xl mb-4 transform group-hover:scale-110 transition-transform duration-300">
                   {feature.icon}
                 </div>
-                <h3 className={`text-2xl font-bold mb-3 text-${feature.color}-400`}>
+                <h3 className={`text-xl md:text-2xl font-bold mb-3 text-${feature.color}-400 group-hover:text-${feature.color}-300 transition-colors`}>
                   {feature.title}
                 </h3>
-                <p className="text-gray-300 leading-relaxed">
+                <p className="text-zinc-300 text-sm md:text-base leading-relaxed">
                   {feature.description}
                 </p>
               </div>
 
-              {/* Corner accent */}
-              <div className={`absolute top-0 left-0 w-2 h-2 bg-${feature.color}-500`}></div>
-              <div className={`absolute bottom-0 right-0 w-2 h-2 bg-${feature.color}-500`}></div>
+              {/* Corner accents */}
+              <div className="absolute top-0 right-0 w-16 h-16 border-t-2 border-r-2 border-cyan-500/20 rounded-tr-2xl"></div>
+              <div className="absolute bottom-0 left-0 w-16 h-16 border-b-2 border-l-2 border-purple-500/20 rounded-bl-2xl"></div>
             </div>
           ))}
         </div>

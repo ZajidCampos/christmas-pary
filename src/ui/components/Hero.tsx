@@ -77,11 +77,6 @@ export default function Hero({ event }: HeroProps) {
               {event.availableTickets} lugares disponibles de {event.capacity}
             </span>
           </div>
-          <div className="text-center">
-            <span className="text-xl md:text-2xl font-black text-pink-400">
-              🎉 ENTRADA GRATUITA 🎉
-            </span>
-          </div>
         </div>
       </div>
 
