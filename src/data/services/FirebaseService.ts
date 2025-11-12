@@ -41,25 +41,58 @@ export class FirebaseService {
    */
   async getAllRSVPs(): Promise<any[]> {
     try {
-      const q = query(
-        collection(db, this.rsvpCollection),
-        orderBy('createdAt', 'desc')
-      );
+      console.log('FirebaseService: Obteniendo todos los RSVPs...');
       
-      const querySnapshot = await getDocs(q);
-      const rsvps: any[] = [];
-      
-      querySnapshot.forEach((doc) => {
-        rsvps.push({
-          id: doc.id,
-          ...doc.data(),
-        });
+      // Timeout de 5 segundos para evitar que se quede colgado
+      const timeoutPromise = new Promise<any[]>((_, reject) => {
+        setTimeout(() => reject(new Error('Timeout al consultar Firebase')), 5000);
       });
       
-      return rsvps;
-    } catch (error) {
-      console.error('Error al obtener RSVPs:', error);
-      throw error;
+      // Intentar primero con orderBy
+      const queryPromise = (async () => {
+        try {
+          const q = query(
+            collection(db, this.rsvpCollection),
+            orderBy('createdAt', 'desc')
+          );
+          
+          const querySnapshot = await getDocs(q);
+          const rsvps: any[] = [];
+          
+          querySnapshot.forEach((doc) => {
+            rsvps.push({
+              id: doc.id,
+              ...doc.data(),
+            });
+          });
+          
+          console.log('FirebaseService: RSVPs encontrados (con orderBy):', rsvps.length);
+          return rsvps;
+        } catch (orderError: any) {
+          // Si falla por falta de índice, intentar sin orderBy
+          console.log('FirebaseService: orderBy falló, intentando sin orden:', orderError.message);
+          const querySnapshot = await getDocs(collection(db, this.rsvpCollection));
+          const rsvps: any[] = [];
+          
+          querySnapshot.forEach((doc) => {
+            rsvps.push({
+              id: doc.id,
+              ...doc.data(),
+            });
+          });
+          
+          console.log('FirebaseService: RSVPs encontrados (sin orderBy):', rsvps.length);
+          return rsvps;
+        }
+      })();
+      
+      // Race entre la query y el timeout
+      return await Promise.race([queryPromise, timeoutPromise]);
+    } catch (error: any) {
+      console.error('FirebaseService: Error al obtener RSVPs:', error.message);
+      // Si la colección no existe o hay timeout, devolver array vacío
+      console.log('FirebaseService: Devolviendo array vacío');
+      return [];
     }
   }
 
@@ -127,6 +160,7 @@ export class FirebaseService {
     totalGuests: number;
   }> {
     try {
+      console.log('FirebaseService: Obteniendo estadísticas...');
       const allRSVPs = await this.getAllRSVPs();
       
       let needingAccommodation = 0;
@@ -134,20 +168,40 @@ export class FirebaseService {
       let totalGuests = 0;
       
       allRSVPs.forEach(rsvp => {
+        // Contar al organizador
         if (rsvp.needsAccommodation) needingAccommodation++;
         if (rsvp.interestedInTequilaTour) interestedInTour++;
         totalGuests += rsvp.guests || 1;
+        
+        // Contar invitados adicionales en la lista
+        if (rsvp.guestsList && Array.isArray(rsvp.guestsList)) {
+          rsvp.guestsList.forEach((guest: any) => {
+            if (guest.needsAccommodation) needingAccommodation++;
+            if (guest.interestedInTequilaTour) interestedInTour++;
+          });
+        }
       });
       
-      return {
+      const stats = {
         total: allRSVPs.length,
         needingAccommodation,
         interestedInTour,
         totalGuests,
       };
+      
+      console.log('FirebaseService: Estadísticas calculadas:', stats);
+      return stats;
     } catch (error) {
-      console.error('Error al obtener estadísticas:', error);
-      throw error;
+      console.error('FirebaseService: Error al obtener estadísticas:', error);
+      // Si hay error, devolver valores en 0 (colección vacía o no existe)
+      const emptyStats = {
+        total: 0,
+        needingAccommodation: 0,
+        interestedInTour: 0,
+        totalGuests: 0,
+      };
+      console.log('FirebaseService: Devolviendo estadísticas vacías');
+      return emptyStats;
     }
   }
 

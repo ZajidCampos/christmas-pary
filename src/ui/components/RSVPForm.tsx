@@ -1,8 +1,9 @@
 'use client';
 
 import { useState } from 'react';
-import { RSVPFormData } from '../../domain/entities/Ticket';
+import { RSVPFormData, GuestInfo } from '../../domain/entities/Ticket';
 import { FirebaseService } from '../../data/services/FirebaseService';
+import RSVPSuccessMessage from './RSVPSuccessMessage';
 
 interface RSVPFormProps {
   accommodationAvailable: number;
@@ -13,10 +14,12 @@ export default function RSVPForm({ accommodationAvailable, onSubmitSuccess }: RS
   const [formData, setFormData] = useState<RSVPFormData>({
     name: '',
     email: '',
+    phone: '',
     city: '',
     needsAccommodation: false,
     interestedInTequilaTour: false,
     guests: 1,
+    guestsList: [],
     dietaryRestrictions: '',
     message: '',
   });
@@ -37,7 +40,7 @@ export default function RSVPForm({ accommodationAvailable, onSubmitSuccess }: RS
       const emailExists = await firebaseService.checkEmailExists(formData.email);
       
       if (emailExists) {
-        setError('Este email ya está registrado. Si necesitas modificar tu RSVP, contáctanos.');
+        setError('Este email ya está registrado. Si necesitas modificar tu Información, mandame un mensjae, jaja.');
         setIsSubmitting(false);
         return;
       }
@@ -69,6 +72,37 @@ export default function RSVPForm({ accommodationAvailable, onSubmitSuccess }: RS
         ...prev,
         [name]: checked,
       }));
+    } else if (name === 'guests') {
+      const guestCount = parseInt(value);
+      // Actualizar la lista de invitados cuando cambia el número
+      const currentGuests = formData.guestsList;
+      let newGuestsList = [...currentGuests];
+      
+      if (guestCount > 1) {
+        // Agregar o mantener invitados según el número
+        const guestsNeeded = guestCount - 1; // -1 porque el organizador no cuenta
+        if (newGuestsList.length < guestsNeeded) {
+          // Agregar nuevos invitados
+          for (let i = newGuestsList.length; i < guestsNeeded; i++) {
+            newGuestsList.push({
+              name: '',
+              needsAccommodation: false,
+              interestedInTequilaTour: false,
+            });
+          }
+        } else if (newGuestsList.length > guestsNeeded) {
+          // Eliminar invitados extras
+          newGuestsList = newGuestsList.slice(0, guestsNeeded);
+        }
+      } else {
+        newGuestsList = [];
+      }
+      
+      setFormData(prev => ({
+        ...prev,
+        guests: guestCount,
+        guestsList: newGuestsList,
+      }));
     } else {
       setFormData(prev => ({
         ...prev,
@@ -77,51 +111,40 @@ export default function RSVPForm({ accommodationAvailable, onSubmitSuccess }: RS
     }
   };
 
+  const handleGuestChange = (index: number, field: keyof GuestInfo, value: string | boolean) => {
+    const newGuestsList = [...formData.guestsList];
+    newGuestsList[index] = {
+      ...newGuestsList[index],
+      [field]: value,
+    };
+    setFormData(prev => ({
+      ...prev,
+      guestsList: newGuestsList,
+    }));
+  };
+
   if (submitted) {
     return (
-      <div className="max-w-2xl mx-auto p-6 md:p-8 bg-zinc-900/70 border-2 border-cyan-500 text-center rounded-2xl backdrop-blur-sm">
-        <div className="mb-6">
-          <div className="text-6xl mb-4">✓</div>
-          <h3 className="text-2xl md:text-3xl font-black text-cyan-400 mb-4">
-            ¡CONFIRMACIÓN EXITOSA!
-          </h3>
-          <p className="text-zinc-300 text-base md:text-lg mb-4">
-            Gracias por confirmar tu asistencia a la Techno Posada 2025
-          </p>
-          <div className="inline-flex items-center gap-2 px-4 md:px-6 py-2 md:py-3 bg-purple-900/30 border border-purple-500/30 rounded-xl">
-            <span className="text-purple-400 font-mono text-xs md:text-sm">
-              ▸ Te enviaremos los detalles a: <span className="text-cyan-400">{formData.email}</span>
-            </span>
-          </div>
-        </div>
-
-        {formData.needsAccommodation && (
-          <div className="mt-6 p-4 bg-cyan-900/20 border border-cyan-500/30">
-            <p className="text-cyan-400 font-mono text-sm">
-              🏠 ¡Perfecto! Te contactaremos pronto con información sobre el hospedaje.
-            </p>
-          </div>
-        )}
-
-        <button
-          onClick={() => {
-            setSubmitted(false);
-            setFormData({
-              name: '',
-              email: '',
-              city: '',
-              needsAccommodation: false,
-              interestedInTequilaTour: false,
-              guests: 1,
-              dietaryRestrictions: '',
-              message: '',
-            });
-          }}
-          className="mt-8 px-6 py-3 border-2 border-cyan-400 text-cyan-400 font-bold hover:bg-cyan-400/10 transition-all"
-        >
-          NUEVA CONFIRMACIÓN
-        </button>
-      </div>
+      <RSVPSuccessMessage
+        email={formData.email}
+        phone={formData.phone}
+        needsAccommodation={formData.needsAccommodation}
+        onNewRSVP={() => {
+          setSubmitted(false);
+          setFormData({
+            name: '',
+            email: '',
+            phone: '',
+            city: '',
+            needsAccommodation: false,
+            interestedInTequilaTour: false,
+            guests: 1,
+            guestsList: [],
+            dietaryRestrictions: '',
+            message: '',
+          });
+        }}
+      />
     );
   }
 
@@ -156,15 +179,40 @@ export default function RSVPForm({ accommodationAvailable, onSubmitSuccess }: RS
             id="email"
             name="email"
             required
+            inputMode="email"
+            pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$"
             value={formData.email}
             onChange={handleChange}
             className="w-full px-4 py-3 bg-zinc-900/50 border-2 border-cyan-500/30 focus:border-cyan-500 text-white outline-none transition-all font-mono rounded-xl"
             placeholder="tu@email.com"
+            title="Ingresa un correo válido (ejemplo: usuario@email.com)"
           />
         </div>
       </div>
 
       <div className="grid md:grid-cols-2 gap-6">
+        {/* WhatsApp */}
+        <div>
+          <label htmlFor="phone" className="block text-cyan-400 font-mono text-sm mb-2">
+            WHATSAPP *
+          </label>
+          <input
+            type="tel"
+            id="phone"
+            name="phone"
+            required
+            inputMode="numeric"
+            pattern="[0-9]{10}"
+            maxLength={10}
+            value={formData.phone}
+            onChange={handleChange}
+            className="w-full px-4 py-3 bg-zinc-900/50 border-2 border-cyan-500/30 focus:border-cyan-500 text-white outline-none transition-all font-mono rounded-xl"
+            placeholder="3312345678"
+            title="Ingresa 10 dígitos sin espacios (ejemplo: 3312345678)"
+          />
+          <p className="text-gray-400 text-xs mt-1">10 dígitos sin espacios ni guiones</p>
+        </div>
+
         {/* Ciudad */}
         <div>
           <label htmlFor="city" className="block text-cyan-400 font-mono text-sm mb-2">
@@ -181,31 +229,62 @@ export default function RSVPForm({ accommodationAvailable, onSubmitSuccess }: RS
             placeholder="Ciudad, Estado"
           />
         </div>
-
-        {/* Número de invitados */}
-        <div>
-          <label htmlFor="guests" className="block text-cyan-400 font-mono text-sm mb-2">
-            ¿CUÁNTOS ASISTIRÁN? *
-          </label>
-          <select
-            id="guests"
-            name="guests"
-            required
-            value={formData.guests}
-            onChange={handleChange}
-            className="w-full px-4 py-3 bg-zinc-900/50 border-2 border-cyan-500/30 focus:border-cyan-500 text-white outline-none transition-all font-mono rounded-xl"
-          >
-            <option value={1}>Solo yo</option>
-            <option value={2}>2 personas</option>
-            <option value={3}>3 personas</option>
-            <option value={4}>4 personas</option>
-            <option value={5}>5+ personas</option>
-          </select>
-        </div>
       </div>
 
+      {/* Número de invitados */}
+      <div>
+        <label htmlFor="guests" className="block text-cyan-400 font-mono text-sm mb-2">
+          ¿CUÁNTOS ASISTIRÁN? *
+        </label>
+        <select
+          id="guests"
+          name="guests"
+          required
+          value={formData.guests}
+          onChange={handleChange}
+          className="w-full px-4 py-3 bg-zinc-900/50 border-2 border-cyan-500/30 focus:border-cyan-500 text-white outline-none transition-all font-mono rounded-xl"
+        >
+          <option value={1}>Solo yo</option>
+          <option value={2}>2 personas</option>
+          <option value={3}>3 personas</option>
+          <option value={4}>4 personas</option>
+          <option value={5}>5+ personas</option>
+        </select>
+      </div>
+
+      {/* Lista de invitados adicionales - Solo nombres */}
+      {formData.guests > 1 && (
+        <div className="space-y-4">
+          <h3 className="text-white font-bold text-lg mb-4">
+            Nombres de tus invitados
+          </h3>
+          {formData.guestsList.map((guest, index) => (
+            <div key={index} className="p-4 bg-zinc-900/70 border border-cyan-500/20 rounded-xl">
+              <div className="flex items-center gap-2 mb-3">
+                <span className="text-cyan-400 font-mono text-sm">INVITADO #{index + 1}</span>
+              </div>
+              
+              <div>
+                <label htmlFor={`guest-name-${index}`} className="block text-cyan-400 font-mono text-xs mb-2">
+                  NOMBRE COMPLETO *
+                </label>
+                <input
+                  type="text"
+                  id={`guest-name-${index}`}
+                  required
+                  value={guest.name}
+                  onChange={(e) => handleGuestChange(index, 'name', e.target.value)}
+                  className="w-full px-3 py-2 bg-zinc-900/50 border border-cyan-500/30 focus:border-cyan-500 text-white outline-none transition-all font-mono rounded-lg text-sm"
+                  placeholder="Nombre del invitado"
+                />
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+
       {/* Hospedaje */}
-      <div className="p-6 bg-gradient-to-r from-purple-900/20 to-cyan-900/20 border-2 border-purple-500/20 rounded-xl">
+      <div className="p-6 bg-gradient-to-r from-purple-900/20 to-cyan-900/20 border-2 border-purple-500/20 rounded-xl space-y-4">
         <div className="flex items-start gap-4">
           <input
             type="checkbox"
@@ -231,10 +310,30 @@ export default function RSVPForm({ accommodationAvailable, onSubmitSuccess }: RS
             )}
           </div>
         </div>
+
+        {/* Invitados que necesitan hospedaje */}
+        {formData.guests > 1 && (
+          <div className="pl-9">
+            <p className="text-gray-300 text-sm mb-3">¿Cuáles de tus invitados necesitan hospedaje?</p>
+            <div className="space-y-2">
+              {formData.guestsList.map((guest, index) => (
+                <label key={index} className="flex items-center gap-2 text-sm text-gray-300 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={guest.needsAccommodation}
+                    onChange={(e) => handleGuestChange(index, 'needsAccommodation', e.target.checked)}
+                    className="w-4 h-4 accent-cyan-500"
+                  />
+                  <span>{guest.name || `Invitado #${index + 1}`}</span>
+                </label>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Tour a Tequila */}
-      <div className="p-6 bg-gradient-to-r from-cyan-900/20 to-purple-900/20 border-2 border-cyan-500/20 rounded-xl">
+      <div className="p-6 bg-gradient-to-r from-cyan-900/20 to-purple-900/20 border-2 border-cyan-500/20 rounded-xl space-y-4">
         <div className="flex items-start gap-4">
           <input
             type="checkbox"
@@ -260,6 +359,26 @@ export default function RSVPForm({ accommodationAvailable, onSubmitSuccess }: RS
             )}
           </div>
         </div>
+
+        {/* Invitados interesados en tour */}
+        {formData.guests > 1 && (
+          <div className="pl-9">
+            <p className="text-gray-300 text-sm mb-3">¿Cuáles de tus invitados están interesados en el tour?</p>
+            <div className="space-y-2">
+              {formData.guestsList.map((guest, index) => (
+                <label key={index} className="flex items-center gap-2 text-sm text-gray-300 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={guest.interestedInTequilaTour}
+                    onChange={(e) => handleGuestChange(index, 'interestedInTequilaTour', e.target.checked)}
+                    className="w-4 h-4 accent-cyan-500"
+                  />
+                  <span>{guest.name || `Invitado #${index + 1}`}</span>
+                </label>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Restricciones dietéticas */}

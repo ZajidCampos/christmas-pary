@@ -8,20 +8,20 @@ export class EventRepository {
     return {
       id: '1',
       title: 'TECHNO POSADA 2025',
-      subtitle: 'Navidad Electrónica en Zapopan',
+      subtitle: 'Una fiesta para mis amigxs más increíbles 🫶',
       date: new Date('2025-12-19T22:00:00'),
-      description: 'La posada más electrónica del año. Una noche donde la tradición mexicana se encuentra con los beats más potentes del techno. ¡ENTRADA GRATUITA! Cupo máximo: 30 personas.',
+      description: 'Si tienes este link es porque fuiste de las personas más increíbles que conocí o seguí manteniendo en mi vida este año. Hagamos una noche épica, con techno, risas y la mejor vibra. ¡Te quiero ahí!',
       theme: 'techno-christmas',
       capacity: 30,
-      availableTickets: 25,
+      availableTickets: 30, // Valor inicial, se actualiza dinámicamente desde Firebase
     };
   }
 
   getLocation(): Location {
     return {
       id: '1',
-      name: 'Venue Zapopan',
-      address: 'Av. Patria 1201, Col. Lomas del Valle',
+      name: 'UBICACIÓN PRIVADA EN ZAPOPAN',
+      address: 'Te envia la ubicación exacta al confirmar asistencia',
       city: 'Zapopan',
       state: 'Jalisco',
       coordinates: {
@@ -37,35 +37,55 @@ export class EventRepository {
       items: [
         {
           id: '1',
-          time: '22:00',
-          title: 'Warm Up Session',
-          description: 'Recepción y bienvenida con beats progresivos',
+          time: '20:00',
+          title: 'Apertura & Warm Up',
+          description: 'Recepción, bienvenida y beats progresivos para empezar la noche',
         },
         {
           id: '2',
-          time: '23:00',
-          title: 'DJ Local Set',
-          description: 'Apertura con lo mejor del techno local',
-          artist: 'DJ Sonido del Valle',
+          time: '21:00',
+          title: 'Cena Navideña',
+          description: 'Momento para compartir alimentos y convivir. Trae algo para compartir si gustas',
         },
         {
           id: '3',
-          time: '00:30',
-          title: 'Posada Break',
-          description: 'Piñata techno y ponche navideño',
+          time: '22:30',
+          title: 'Minimal & Deep House Set',
+          description: 'Sonidos profundos y grooves hipnóticos que preparan el ambiente',
+          artist: 'DJ Set 1',
         },
         {
           id: '4',
-          time: '01:00',
-          title: 'Main Act',
-          description: 'El headliner de la noche con hard techno',
-          artist: 'TBA',
+          time: '23:30',
+          title: 'Piñata Techno',
+          description: 'Tradición mexicana con twist electrónico. ¡Sorpresas para todos!',
         },
         {
           id: '5',
-          time: '03:00',
-          title: 'Closing Set',
-          description: 'Cierre épico hasta el amanecer',
+          time: '00:30',
+          title: 'Concurso de Porros',
+          description: '🌿 Competencia del mejor forjador. Premios para el más creativo, artístico y funcional. Que gane el mejor rolling!',
+        },
+        {
+          id: '6',
+          time: '01:00',
+          title: 'Peak Time Techno',
+          description: 'El momento más intenso de la noche. Hard techno y kicks potentes',
+          artist: 'DJ Set 2',
+        },
+        {
+          id: '7',
+          time: '02:30',
+          title: 'Progressive House',
+          description: 'Melodías envolventes y builds épicos para mantener la energía',
+          artist: 'DJ Set 3',
+        },
+        {
+          id: '8',
+          time: '03:30',
+          title: 'Closing Techno',
+          description: 'Cierre contundente hasta las 4:00 AM. La última pista antes del amanecer',
+          artist: 'DJ Set 4',
         },
       ],
     };

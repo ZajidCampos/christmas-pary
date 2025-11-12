@@ -31,7 +31,7 @@ export default function RSVPSection({ attendeeInfo }: RSVPSectionProps) {
       const accommodationAvailable = Math.max(0, 8 - firebaseStats.needingAccommodation);
       
       setStats({
-        confirmed: firebaseStats.total,
+        confirmed: firebaseStats.totalGuests, // Total de personas (no RSVPs)
         accommodationAvailable,
         totalGuests: firebaseStats.totalGuests,
       });
@@ -125,22 +125,65 @@ export default function RSVPSection({ attendeeInfo }: RSVPSectionProps) {
             </div>
             <div className="grid md:grid-cols-2 gap-6 text-gray-300 text-sm">
               <div>
-                <h4 className="text-white font-bold mb-2">Sobre el Evento</h4>
-                <ul className="space-y-1">
-                  <li>🎉 Entrada totalmente gratuita</li>
-                  <li>🎄 Incluye ponche y posada tradicional</li>
-                  <li>🎵 Música techno toda la noche</li>
-                  <li>🎁 Piñata y regalos sorpresa</li>
-                </ul>
+                <div className="p-5 md:p-6 bg-zinc-900/30 rounded-xl border border-zinc-800/50">
+                  <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-cyan-500/10 border border-cyan-500/30 rounded-full mb-4">
+                    <div className="w-1.5 h-1.5 bg-cyan-400 rounded-full animate-pulse"></div>
+                    <h4 className="text-cyan-400 font-bold text-sm uppercase tracking-wider">Sobre el Evento</h4>
+                  </div>
+                  
+                  <ul className="space-y-0">
+                    <li className="flex items-start gap-3 py-3">
+                      <span className="text-lg mt-0.5">🎉</span>
+                      <span className="text-sm md:text-base text-gray-200">Entrada totalmente gratuita</span>
+                    </li>
+                    <div className="h-px bg-zinc-700/30"></div>
+                    <li className="flex items-start gap-3 py-3">
+                      <span className="text-lg mt-0.5">🎄</span>
+                      <span className="text-sm md:text-base text-gray-200">Incluye ponche y posada tradicional</span>
+                    </li>
+                    <div className="h-px bg-zinc-700/30"></div>
+                    <li className="flex items-start gap-3 py-3">
+                      <span className="text-lg mt-0.5">🎵</span>
+                      <span className="text-sm md:text-base text-gray-200">Música techno toda la noche</span>
+                    </li>
+                    <div className="h-px bg-zinc-700/30"></div>
+                    <li className="flex items-start gap-3 py-3">
+                      <span className="text-lg mt-0.5">🎁</span>
+                      <span className="text-sm md:text-base text-gray-200">Piñata y regalos sorpresa</span>
+                    </li>
+                  </ul>
+                </div>
               </div>
+              
               <div>
-                <h4 className="text-white font-bold mb-2">Hospedaje</h4>
-                <ul className="space-y-1">
-                  <li>🏠 Espacio limitado en casa del host</li>
-                  <li>🛏️ Trae tu sleeping bag o colchoneta</li>
-                  <li>🚿 Baño y regadera disponibles</li>
-                  <li>☕ Desayuno incluido al día siguiente</li>
-                </ul>
+                <div className="p-5 md:p-6 bg-zinc-900/30 rounded-xl border border-zinc-800/50">
+                  <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-purple-500/10 border border-purple-500/30 rounded-full mb-4">
+                    <div className="w-1.5 h-1.5 bg-purple-400 rounded-full animate-pulse"></div>
+                    <h4 className="text-purple-400 font-bold text-sm uppercase tracking-wider">Hospedaje</h4>
+                  </div>
+                  
+                  <ul className="space-y-0">
+                    <li className="flex items-start gap-3 py-3">
+                      <span className="text-lg mt-0.5">🏠</span>
+                      <span className="text-sm md:text-base text-gray-200">Espacio limitado en casa del host</span>
+                    </li>
+                    <div className="h-px bg-zinc-700/30"></div>
+                    <li className="flex items-start gap-3 py-3">
+                      <span className="text-lg mt-0.5">🛏️</span>
+                      <span className="text-sm md:text-base text-gray-200">Trae tu sleeping bag o colchoneta</span>
+                    </li>
+                    <div className="h-px bg-zinc-700/30"></div>
+                    <li className="flex items-start gap-3 py-3">
+                      <span className="text-lg mt-0.5">🚿</span>
+                      <span className="text-sm md:text-base text-gray-200">Baño y regadera disponibles</span>
+                    </li>
+                    <div className="h-px bg-zinc-700/30"></div>
+                    <li className="flex items-start gap-3 py-3">
+                      <span className="text-lg mt-0.5">☕</span>
+                      <span className="text-sm md:text-base text-gray-200">Desayuno incluido al día siguiente</span>
+                    </li>
+                  </ul>
+                </div>
               </div>
             </div>
           </div>

@@ -1,10 +1,41 @@
+'use client';
+
+import { useState, useEffect } from 'react';
 import { Event } from '../../domain/entities/Event';
+import { FirebaseService } from '../../data/services/FirebaseService';
 
 interface HeroProps {
   event: Event;
 }
 
 export default function Hero({ event }: HeroProps) {
+  const [availableSpots, setAvailableSpots] = useState(event.capacity);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const loadAvailability = async () => {
+      console.log('Hero: Iniciando carga de disponibilidad...');
+      try {
+        const firebaseService = new FirebaseService();
+        console.log('Hero: FirebaseService creado');
+        const stats = await firebaseService.getRSVPStats();
+        console.log('Hero: Stats obtenidas:', stats);
+        const available = event.capacity - stats.totalGuests;
+        console.log('Hero: Lugares disponibles:', available);
+        setAvailableSpots(Math.max(0, available));
+      } catch (error) {
+        console.error('Hero: Error al cargar disponibilidad:', error);
+        // Si hay error o no hay datos, mostrar capacidad completa
+        setAvailableSpots(event.capacity);
+      } finally {
+        console.log('Hero: Finalizando carga');
+        setLoading(false);
+      }
+    };
+
+    loadAvailability();
+  }, [event.capacity]);
+
   const formattedDate = new Intl.DateTimeFormat('es-MX', {
     weekday: 'long',
     year: 'numeric',
@@ -37,13 +68,18 @@ export default function Hero({ event }: HeroProps) {
           {event.subtitle}
         </p>
 
-        <div className="flex flex-col md:flex-row items-center justify-center gap-3 md:gap-4 mb-8 md:mb-12 px-4">
-          <div className="flex items-center gap-2 text-cyan-400 font-mono text-sm md:text-base">
+        <div className="flex flex-col md:flex-row items-center justify-center gap-2 md:gap-4 mb-8 md:mb-12 px-4">
+          <div className="flex items-center gap-2 text-cyan-400 font-mono text-sm md:text-base py-2">
             <span className="text-pink-500">●</span>
             <span>{formattedDate}</span>
           </div>
-          <div className="hidden md:block text-purple-500">|</div>
-          <div className="flex items-center gap-2 text-cyan-400 font-mono text-sm md:text-base">
+          <span className="hidden md:inline text-purple-500">|</span>
+          <div className="flex items-center gap-2 text-cyan-400 font-mono text-sm md:text-base py-2">
+            <span className="text-pink-500">●</span>
+            <span>20:00 - 04:00</span>
+          </div>
+          <span className="hidden md:inline text-purple-500">|</span>
+          <div className="flex items-center gap-2 text-cyan-400 font-mono text-sm md:text-base py-2">
             <span className="text-pink-500">●</span>
             <span>Zapopan, JAL</span>
           </div>
@@ -74,7 +110,7 @@ export default function Hero({ event }: HeroProps) {
           <div className="inline-flex items-center gap-2 px-4 md:px-6 py-2 md:py-3 bg-zinc-900/70 border border-cyan-500/30 rounded-full backdrop-blur-sm">
             <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
             <span className="text-cyan-400 font-mono text-xs md:text-sm">
-              {event.availableTickets} lugares disponibles de {event.capacity}
+              {loading ? 'Cargando...' : `${availableSpots} lugares disponibles de ${event.capacity}`}
             </span>
           </div>
         </div>

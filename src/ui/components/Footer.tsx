@@ -1,3 +1,5 @@
+import { MessageCircle, Music, Headphones, Smartphone } from 'lucide-react';
+
 export default function Footer() {
   const currentYear = new Date().getFullYear();
 
@@ -35,12 +37,7 @@ export default function Footer() {
               </li>
               <li>
                 <a href="#" className="text-gray-400 hover:text-cyan-400 transition-colors text-sm">
-                  Términos y Condiciones
-                </a>
-              </li>
-              <li>
-                <a href="#" className="text-gray-400 hover:text-cyan-400 transition-colors text-sm">
-                  Políticas de Privacidad
+                  Ubicación
                 </a>
               </li>
             </ul>
@@ -51,38 +48,42 @@ export default function Footer() {
             <h4 className="text-lg font-bold text-white mb-4">CONECTA</h4>
             <div className="space-y-3 mb-4">
               <a
-                href="#"
-                className="flex items-center gap-3 text-gray-400 hover:text-cyan-400 transition-colors text-sm"
+                href="https://wa.me/5233339126481"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-3 text-gray-400 hover:text-cyan-400 transition-colors text-sm group"
               >
-                <span className="text-lg">📧</span>
-                <span>info@technoposada.mx</span>
+                <MessageCircle className="w-5 h-5 group-hover:scale-110 transition-transform" />
+                <span>WhatsApp: +52 33 3912 6481</span>
               </a>
               <a
-                href="#"
-                className="flex items-center gap-3 text-gray-400 hover:text-cyan-400 transition-colors text-sm"
+                href="https://open.spotify.com/playlist/5ytBSQCwTgcZjJXH6HpFct?si=180f2503f9c84966"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-3 text-gray-400 hover:text-cyan-400 transition-colors text-sm group"
               >
-                <span className="text-lg">📱</span>
-                <span>+52 33 1234 5678</span>
+                <Music className="w-5 h-5 group-hover:scale-110 transition-transform" />
+                <span>Playlist Oficial</span>
               </a>
             </div>
             <div className="flex gap-4">
               <a
-                href="#"
-                className="w-10 h-10 bg-black/50 border border-cyan-500/30 hover:border-cyan-500 flex items-center justify-center transition-all hover:scale-110"
+                href="https://open.spotify.com/playlist/5ytBSQCwTgcZjJXH6HpFct?si=180f2503f9c84966"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-10 h-10 bg-black/50 border border-cyan-500/30 hover:border-cyan-500 hover:bg-cyan-500/10 flex items-center justify-center transition-all hover:scale-110 group"
+                title="Spotify Playlist"
               >
-                <span className="text-lg">📘</span>
+                <Headphones className="w-5 h-5 text-gray-400 group-hover:text-cyan-400 transition-colors" />
               </a>
               <a
-                href="#"
-                className="w-10 h-10 bg-black/50 border border-cyan-500/30 hover:border-cyan-500 flex items-center justify-center transition-all hover:scale-110"
+                href="https://wa.me/5233339126481"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-10 h-10 bg-black/50 border border-cyan-500/30 hover:border-cyan-500 hover:bg-cyan-500/10 flex items-center justify-center transition-all hover:scale-110 group"
+                title="WhatsApp"
               >
-                <span className="text-lg">📷</span>
-              </a>
-              <a
-                href="#"
-                className="w-10 h-10 bg-black/50 border border-cyan-500/30 hover:border-cyan-500 flex items-center justify-center transition-all hover:scale-110"
-              >
-                <span className="text-lg">🐦</span>
+                <Smartphone className="w-5 h-5 text-gray-400 group-hover:text-cyan-400 transition-colors" />
               </a>
             </div>
           </div>
@@ -92,7 +93,7 @@ export default function Footer() {
         <div className="pt-8 border-t border-cyan-500/20">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
             <p className="text-gray-400 text-sm font-mono">
-              © {currentYear} TECHNO POSADA. Todos los derechos reservados.
+              © {currentYear} Zajid Campos | Host y amigo
             </p>
             <div className="flex items-center gap-2">
               <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>

@@ -24,11 +24,25 @@ export default function Features({}: FeaturesProps) {
       gradient: 'from-pink-500/10 to-pink-500/5',
     },
     {
-      icon: '🏠',
-      title: 'HOSPEDAJE GRATIS',
-      description: 'Para personas de otra ciudad. Cupo limitado para 8 personas',
+      icon: '🫧',
+      title: 'ALBERCA DISPONIBLE',
+      description: 'Si gustas traer tu traje de baño y toalla para disfrutar de la alberca',
       color: 'cyan',
       gradient: 'from-cyan-500/10 to-cyan-500/5',
+    },
+    {
+      icon: '🏠',
+      title: 'HOSPEDAJE EN CASA DEL HOST',
+      description: 'Para personas de otra ciudad. Cupo limitado para 8 personas',
+      color: 'purple',
+      gradient: 'from-purple-500/10 to-purple-500/5',
+    },
+    {
+      icon: '🚌',
+      title: 'TOUR A TEQUILA',
+      description: 'Domingo 21 de diciembre. Invitación exclusiva para asistentes de la posada',
+      color: 'pink',
+      gradient: 'from-pink-500/10 to-pink-500/5',
     },
   ];
 

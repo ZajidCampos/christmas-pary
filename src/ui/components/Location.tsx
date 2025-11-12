@@ -66,12 +66,10 @@ export default function Location({ location }: LocationProps) {
 
                 <div className="border-t border-cyan-500/20 pt-4 mt-4">
                   <a
-                    href={location.mapUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-cyan-500 to-purple-500 text-white font-bold hover:scale-105 transition-transform"
+                    href="#rsvp"
+                    className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-cyan-500 to-purple-500 text-white font-bold hover:scale-105 transition-transform rounded-lg"
                   >
-                    <span>ABRIR EN GOOGLE MAPS</span>
+                    <span>CONFIRMA ASISTENCIA PARA RECIBIR LA UBICACIÓN</span>
                     <span>→</span>
                   </a>
                 </div>
@@ -88,9 +86,9 @@ export default function Location({ location }: LocationProps) {
               </div>
               <ul className="text-gray-300 space-y-2 text-sm">
                 <li>• Evento para mayores de 18 años</li>
-                <li>• Identificación oficial obligatoria</li>
-                <li>• Dress code: Casual/Techno style</li>
-                <li>• Re-entrada no permitida</li>
+                <li>• Traer tus propias bebidas</li>
+                <li>• Dress code: Navideño</li>
+                <li>• Ambiente seguro, respetuoso y 4:20</li>
               </ul>
             </div>
           </div>
@@ -104,10 +102,10 @@ export default function Location({ location }: LocationProps) {
                   COORDENADAS
                 </div>
                 <div className="text-white font-bold text-lg">
-                  {location.coordinates.lat.toFixed(4)}°N
+                  UBICACIÓN
                 </div>
                 <div className="text-white font-bold text-lg">
-                  {location.coordinates.lng.toFixed(4)}°W
+                  PRIVADA
                 </div>
               </div>
             </div>
