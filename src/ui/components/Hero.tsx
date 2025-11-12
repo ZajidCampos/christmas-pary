@@ -1,8 +1,9 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Event } from '../../domain/entities/Event';
 import { FirebaseService } from '../../data/services/FirebaseService';
+import AnimatedBackground3D from './AnimatedBackground3D';
 
 interface HeroProps {
   event: Event;
@@ -44,58 +45,66 @@ export default function Hero({ event }: HeroProps) {
   }).format(event.date);
 
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-zinc-950">
-      <div className="absolute inset-0 z-0">
-        <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/10 via-purple-500/10 to-pink-500/10"></div>
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(6,182,212,0.05),transparent_50%)]"></div>
-        <div className="grid-overlay absolute inset-0 bg-[linear-gradient(rgba(6,182,212,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(6,182,212,0.02)_1px,transparent_1px)] bg-[size:50px_50px]"></div>
-      </div>
+    <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-black">
+      {/* Fondo 3D con Three.js */}
+      <AnimatedBackground3D />
 
       <div className="relative z-10 container mx-auto px-4 text-center py-20">
+        {/* Overlay oscuro adicional detrás del contenido para mayor contraste */}
+        <div className="absolute inset-0 bg-black/40 backdrop-blur-sm -z-10"></div>
+        
         <div className="mb-6 md:mb-8 inline-block">
-          <div className="text-cyan-400 text-xs md:text-sm font-mono tracking-widest mb-4">
-            ▸ VIERNES 19 DE DICIEMBRE • 22:00 HRS
+          <div className="text-cyan-400 text-xs md:text-sm font-mono tracking-widest mb-4 animate-pulse-glow bg-black/50 px-4 py-2 rounded-lg backdrop-blur-sm">
+            <span className="inline-block animate-blink">▸</span> VIERNES 19 DE DICIEMBRE • 22:00 HRS
           </div>
         </div>
 
-        <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-black mb-4 md:mb-6 tracking-tighter px-4">
-          <span className="bg-gradient-to-r from-cyan-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
+        <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-black mb-4 md:mb-6 tracking-tighter px-4 relative drop-shadow-[0_0_50px_rgba(0,0,0,0.9)]">
+          <span className="bg-gradient-to-r from-cyan-400 via-purple-400 to-pink-400 bg-clip-text text-transparent animate-gradient-x drop-shadow-[0_0_30px_rgba(6,182,212,0.5)] [text-shadow:_0_4px_20px_rgb(0_0_0_/_80%)]">
+            {event.title}
+          </span>
+          {/* Glitch effect overlay */}
+          <span className="absolute inset-0 bg-gradient-to-r from-cyan-400 via-purple-400 to-pink-400 bg-clip-text text-transparent opacity-70 animate-glitch-1"
+            aria-hidden="true">
             {event.title}
           </span>
         </h1>
 
-        <p className="text-xl md:text-2xl lg:text-3xl text-purple-300 font-light mb-6 md:mb-8 tracking-wide px-4">
+        <p className="text-xl md:text-2xl lg:text-3xl text-purple-300 font-light mb-6 md:mb-8 tracking-wide px-4 animate-fade-in-up bg-black/30 py-2 rounded-lg backdrop-blur-sm inline-block">
           {event.subtitle}
         </p>
 
-        <div className="flex flex-col md:flex-row items-center justify-center gap-2 md:gap-4 mb-8 md:mb-12 px-4">
-          <div className="flex items-center gap-2 text-cyan-400 font-mono text-sm md:text-base py-2">
-            <span className="text-pink-500">●</span>
+        <div className="flex flex-col md:flex-row items-center justify-center gap-2 md:gap-4 mb-8 md:mb-12 px-4 animate-fade-in-up bg-black/40 py-4 rounded-xl backdrop-blur-sm" style={{ animationDelay: '0.2s' }}>
+          <div className="flex items-center gap-2 text-cyan-400 font-mono text-sm md:text-base py-2 hover:scale-110 transition-transform">
+            <span className="text-pink-500 animate-pulse">●</span>
             <span>{formattedDate}</span>
           </div>
           <span className="hidden md:inline text-purple-500">|</span>
-          <div className="flex items-center gap-2 text-cyan-400 font-mono text-sm md:text-base py-2">
-            <span className="text-pink-500">●</span>
+          <div className="flex items-center gap-2 text-cyan-400 font-mono text-sm md:text-base py-2 hover:scale-110 transition-transform">
+            <span className="text-pink-500 animate-pulse" style={{ animationDelay: '0.5s' }}>●</span>
             <span>20:00 - 04:00</span>
           </div>
           <span className="hidden md:inline text-purple-500">|</span>
-          <div className="flex items-center gap-2 text-cyan-400 font-mono text-sm md:text-base py-2">
-            <span className="text-pink-500">●</span>
+          <div className="flex items-center gap-2 text-cyan-400 font-mono text-sm md:text-base py-2 hover:scale-110 transition-transform">
+            <span className="text-pink-500 animate-pulse" style={{ animationDelay: '1s' }}>●</span>
             <span>Zapopan, JAL</span>
           </div>
         </div>
 
-        <p className="text-zinc-300 text-base md:text-lg max-w-2xl mx-auto mb-8 md:mb-12 leading-relaxed px-4">
+        <p className="text-zinc-200 text-base md:text-lg max-w-2xl mx-auto mb-8 md:mb-12 leading-relaxed px-6 py-4 animate-fade-in-up bg-black/40 rounded-xl backdrop-blur-sm" style={{ animationDelay: '0.4s' }}>
           {event.description}
         </p>
 
-        <div className="flex flex-col sm:flex-row gap-3 md:gap-4 justify-center items-center px-4">
+        <div className="flex flex-col sm:flex-row gap-3 md:gap-4 justify-center items-center px-4 animate-fade-in-up" style={{ animationDelay: '0.6s' }}>
           <a
             href="#rsvp"
-            className="w-full sm:w-auto group relative px-6 md:px-8 py-3 md:py-4 bg-gradient-to-r from-cyan-500 to-purple-600 text-white font-bold text-base md:text-lg rounded-xl overflow-hidden transition-all hover:scale-105 hover:shadow-[0_0_30px_rgba(6,182,212,0.3)]"
+            className="w-full sm:w-auto group relative px-6 md:px-8 py-3 md:py-4 bg-gradient-to-r from-cyan-100 to-purple-200 text-black font-bold text-base md:text-lg rounded-xl overflow-hidden transition-all hover:scale-105 hover:shadow-[0_0_40px_rgba(6,182,212,0.6)] animate-pulse-border"
           >
             <span className="relative z-10">CONFIRMAR ASISTENCIA</span>
-            <div className="absolute inset-0 bg-gradient-to-r from-purple-600 to-pink-500 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+            <div className="absolute inset-0 bg-gradient-to-r from-white to-purple-400 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+            <div className="absolute inset-0 opacity-30 group-hover:opacity-50 transition-opacity">
+              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white to-transparent animate-shimmer"></div>
+            </div>
           </a>
 
           <a
