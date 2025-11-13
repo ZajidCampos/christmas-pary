@@ -6,7 +6,7 @@ Landing page para la posada navideña más electrónica de Zapopan, Jalisco.
 
 - ✨ **Landing page moderna** con diseño techno navideño
 - 🎫 **Sistema RSVP gratuito** con Firebase Firestore
-- 🏠 **Gestión de hospedaje** para personas de otra ciudad (máx. 8)
+- 🏠 **Gestión de hospedaje** para personas de otra ciudad (máx. 10)
 - 🚌 **Tour a Tequila** opcional el 21 de diciembre
 - 📊 **Estadísticas en tiempo real** de confirmaciones
 - 🎨 **Diseño responsive** optimizado para mobile

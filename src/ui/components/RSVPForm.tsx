@@ -68,6 +68,19 @@ export default function RSVPForm({ accommodationAvailable, onSubmitSuccess }: RS
     
     if (type === 'checkbox') {
       const checked = (e.target as HTMLInputElement).checked;
+      
+      // Validación especial para hospedaje
+      if (name === 'needsAccommodation' && checked) {
+        // Contar cuántos invitados ya necesitan hospedaje
+        const guestsNeedingAccommodation = formData.guestsList.filter(g => g.needsAccommodation).length;
+        
+        // Verificar si hay cupo disponible
+        if (guestsNeedingAccommodation >= accommodationAvailable) {
+          alert(`⚠️ Lo siento, solo hay ${accommodationAvailable} espacios de hospedaje disponibles y ya están todos solicitados por tus invitados.`);
+          return; // No permitir marcar el checkbox
+        }
+      }
+      
       setFormData(prev => ({
         ...prev,
         [name]: checked,
@@ -113,6 +126,20 @@ export default function RSVPForm({ accommodationAvailable, onSubmitSuccess }: RS
 
   const handleGuestChange = (index: number, field: keyof GuestInfo, value: string | boolean) => {
     const newGuestsList = [...formData.guestsList];
+    
+    // Si se está intentando marcar hospedaje para un invitado, verificar cupos disponibles
+    if (field === 'needsAccommodation' && value === true) {
+      // Contar cuántos ya necesitan hospedaje (incluyendo el titular si marcó)
+      const currentAccommodationNeeds = (formData.needsAccommodation ? 1 : 0) + 
+        formData.guestsList.filter(g => g.needsAccommodation).length;
+      
+      // Verificar si hay cupo disponible
+      if (currentAccommodationNeeds >= accommodationAvailable) {
+        alert(`⚠️ Lo siento, solo hay ${accommodationAvailable} espacios de hospedaje disponibles y ya están todos solicitados.`);
+        return; // No permitir marcar el checkbox
+      }
+    }
+    
     newGuestsList[index] = {
       ...newGuestsList[index],
       [field]: value,
@@ -285,6 +312,21 @@ export default function RSVPForm({ accommodationAvailable, onSubmitSuccess }: RS
 
       {/* Hospedaje */}
       <div className="p-6 bg-gradient-to-r from-purple-900/20 to-cyan-900/20 border-2 border-purple-500/20 rounded-xl space-y-4">
+        {/* Indicador de espacios disponibles */}
+        <div className="mb-4 p-3 bg-purple-900/30 border border-purple-500/30 rounded-lg">
+          <div className="flex items-center justify-between">
+            <span className="text-purple-300 font-mono text-sm">
+              🏠 Espacios de hospedaje disponibles:
+            </span>
+            <span className="text-purple-400 font-bold text-lg">
+              {Math.max(0, accommodationAvailable - 
+                (formData.needsAccommodation ? 1 : 0) - 
+                formData.guestsList.filter(g => g.needsAccommodation).length
+              )} / {accommodationAvailable}
+            </span>
+          </div>
+        </div>
+        
         <div className="flex items-start gap-4">
           <input
             type="checkbox"
@@ -292,14 +334,15 @@ export default function RSVPForm({ accommodationAvailable, onSubmitSuccess }: RS
             name="needsAccommodation"
             checked={formData.needsAccommodation}
             onChange={handleChange}
-            className="mt-1 w-5 h-5 accent-cyan-500"
+            disabled={!formData.needsAccommodation && accommodationAvailable === 0}
+            className="mt-1 w-5 h-5 accent-cyan-500 disabled:opacity-50 disabled:cursor-not-allowed"
           />
           <div className="flex-1">
             <label htmlFor="needsAccommodation" className="block text-white font-bold mb-2 cursor-pointer">
               🏠 Necesito hospedaje
             </label>
             <p className="text-zinc-300 text-sm mb-2">
-              ¿Vienes de otra ciudad? Puedes quedarte en mi casa. Actualmente tenemos: {accommodationAvailable} espacios disponibles.
+              ¿Vienes de otra ciudad? Puedes quedarte en mi casa.
             </p>
             {formData.needsAccommodation && (
               <div className="mt-3 p-3 bg-cyan-900/20 border border-cyan-500/30 rounded-lg">
@@ -316,17 +359,31 @@ export default function RSVPForm({ accommodationAvailable, onSubmitSuccess }: RS
           <div className="pl-9">
             <p className="text-gray-300 text-sm mb-3">¿Cuáles de tus invitados necesitan hospedaje?</p>
             <div className="space-y-2">
-              {formData.guestsList.map((guest, index) => (
-                <label key={index} className="flex items-center gap-2 text-sm text-gray-300 cursor-pointer">
-                  <input
-                    type="checkbox"
-                    checked={guest.needsAccommodation}
-                    onChange={(e) => handleGuestChange(index, 'needsAccommodation', e.target.checked)}
-                    className="w-4 h-4 accent-cyan-500"
-                  />
-                  <span>{guest.name || `Invitado #${index + 1}`}</span>
-                </label>
-              ))}
+              {formData.guestsList.map((guest, index) => {
+                // Calcular cupos usados sin incluir este invitado
+                const currentUsed = (formData.needsAccommodation ? 1 : 0) + 
+                  formData.guestsList.filter((g, i) => i !== index && g.needsAccommodation).length;
+                const isDisabled = !guest.needsAccommodation && currentUsed >= accommodationAvailable;
+                
+                return (
+                  <label 
+                    key={index} 
+                    className={`flex items-center gap-2 text-sm ${isDisabled ? 'text-gray-500 cursor-not-allowed' : 'text-gray-300 cursor-pointer'}`}
+                  >
+                    <input
+                      type="checkbox"
+                      checked={guest.needsAccommodation}
+                      onChange={(e) => handleGuestChange(index, 'needsAccommodation', e.target.checked)}
+                      disabled={isDisabled}
+                      className="w-4 h-4 accent-cyan-500 disabled:opacity-50 disabled:cursor-not-allowed"
+                    />
+                    <span>{guest.name || `Invitado #${index + 1}`}</span>
+                    {isDisabled && (
+                      <span className="text-xs text-red-400">(Sin cupo)</span>
+                    )}
+                  </label>
+                );
+              })}
             </div>
           </div>
         )}
