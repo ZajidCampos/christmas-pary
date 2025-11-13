@@ -18,6 +18,7 @@ export default function RSVPForm({ accommodationAvailable, onSubmitSuccess }: RS
     city: '',
     needsAccommodation: false,
     interestedInTequilaTour: false,
+    interestedInSharedAirbnb: false,
     guests: 1,
     guestsList: [],
     dietaryRestrictions: '',
@@ -101,6 +102,7 @@ export default function RSVPForm({ accommodationAvailable, onSubmitSuccess }: RS
               name: '',
               needsAccommodation: false,
               interestedInTequilaTour: false,
+              interestedInSharedAirbnb: false,
             });
           }
         } else if (newGuestsList.length > guestsNeeded) {
@@ -165,6 +167,7 @@ export default function RSVPForm({ accommodationAvailable, onSubmitSuccess }: RS
             city: '',
             needsAccommodation: false,
             interestedInTequilaTour: false,
+            interestedInSharedAirbnb: false,
             guests: 1,
             guestsList: [],
             dietaryRestrictions: '',
@@ -388,6 +391,71 @@ export default function RSVPForm({ accommodationAvailable, onSubmitSuccess }: RS
           </div>
         )}
       </div>
+
+      {/* Airbnb Compartido - Solo aparece si no hay cupos disponibles */}
+      {accommodationAvailable === 0 && (
+        <div className="p-6 bg-gradient-to-r from-orange-900/20 to-yellow-900/20 border-2 border-orange-500/20 rounded-xl space-y-4">
+          <div className="mb-4 p-3 bg-orange-900/30 border border-orange-500/30 rounded-lg">
+            <div className="flex items-start gap-2">
+              <span className="text-2xl">🏘️</span>
+              <div>
+                <p className="text-orange-300 font-bold text-sm mb-1">
+                  Los cupos de hospedaje en casa están llenos
+                </p>
+                <p className="text-orange-200 text-xs">
+                  ¿Te interesa compartir un Airbnb con otros invitados? Te ayudaremos a conectar con otros asistentes para dividir costos.
+                </p>
+              </div>
+            </div>
+          </div>
+          
+          <div className="flex items-start gap-4">
+            <input
+              type="checkbox"
+              id="interestedInSharedAirbnb"
+              name="interestedInSharedAirbnb"
+              checked={formData.interestedInSharedAirbnb}
+              onChange={handleChange}
+              className="mt-1 w-5 h-5 accent-orange-500"
+            />
+            <div className="flex-1">
+              <label htmlFor="interestedInSharedAirbnb" className="block text-white font-bold mb-2 cursor-pointer">
+                🏠 Me interesa compartir Airbnb con otros invitados
+              </label>
+              <p className="text-zinc-300 text-sm mb-2">
+                Te pondremos en contacto con otros invitados interesados en rentar un Airbnb juntos para dividir gastos.
+              </p>
+              {formData.interestedInSharedAirbnb && (
+                <div className="mt-3 p-3 bg-orange-900/20 border border-orange-500/30 rounded-lg">
+                  <p className="text-orange-400 font-mono text-xs">
+                    ✓ Te enviaremos información para coordinar el Airbnb compartido.
+                  </p>
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Invitados interesados en Airbnb compartido */}
+          {formData.guests > 1 && (
+            <div className="pl-9">
+              <p className="text-gray-300 text-sm mb-3">¿Cuáles de tus invitados están interesados?</p>
+              <div className="space-y-2">
+                {formData.guestsList.map((guest, index) => (
+                  <label key={index} className="flex items-center gap-2 text-sm text-gray-300 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={guest.interestedInSharedAirbnb}
+                      onChange={(e) => handleGuestChange(index, 'interestedInSharedAirbnb', e.target.checked)}
+                      className="w-4 h-4 accent-orange-500"
+                    />
+                    <span>{guest.name || `Invitado #${index + 1}`}</span>
+                  </label>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+      )}
 
       {/* Tour a Tequila */}
       <div className="p-6 bg-gradient-to-r from-cyan-900/20 to-purple-900/20 border-2 border-cyan-500/20 rounded-xl space-y-4">

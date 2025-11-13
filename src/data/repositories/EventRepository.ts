@@ -93,9 +93,9 @@ export class EventRepository {
 
   getAttendeeInfo(): AttendeeInfo {
     return {
-      confirmed: 10,
+      confirmed: 12,
       capacity: 30,
-      accommodationAvailable: 10,
+      accommodationAvailable: 12,
     };
   }
 }

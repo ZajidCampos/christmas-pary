@@ -2,6 +2,7 @@ export interface GuestInfo {
   name: string;
   needsAccommodation: boolean;
   interestedInTequilaTour: boolean;
+  interestedInSharedAirbnb: boolean;
 }
 
 export interface Ticket {
@@ -23,6 +24,7 @@ export interface RSVP {
   city: string;
   needsAccommodation: boolean;
   interestedInTequilaTour: boolean;
+  interestedInSharedAirbnb: boolean;
   guests?: number;
   guestsList?: GuestInfo[];
   dietaryRestrictions?: string;
@@ -36,6 +38,7 @@ export interface RSVPFormData {
   city: string;
   needsAccommodation: boolean;
   interestedInTequilaTour: boolean;
+  interestedInSharedAirbnb: boolean;
   guests: number;
   guestsList: GuestInfo[];
   dietaryRestrictions?: string;

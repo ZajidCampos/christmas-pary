@@ -151,12 +151,40 @@ export class FirebaseService {
   }
 
   /**
+   * Obtener RSVPs interesados en Airbnb compartido
+   */
+  async getRSVPsInterestedInSharedAirbnb(): Promise<any[]> {
+    try {
+      const q = query(
+        collection(db, this.rsvpCollection),
+        where('interestedInSharedAirbnb', '==', true)
+      );
+      
+      const querySnapshot = await getDocs(q);
+      const rsvps: any[] = [];
+      
+      querySnapshot.forEach((doc) => {
+        rsvps.push({
+          id: doc.id,
+          ...doc.data(),
+        });
+      });
+      
+      return rsvps;
+    } catch (error) {
+      console.error('Error al obtener RSVPs interesados en Airbnb compartido:', error);
+      throw error;
+    }
+  }
+
+  /**
    * Obtener estadísticas de RSVPs
    */
   async getRSVPStats(): Promise<{
     total: number;
     needingAccommodation: number;
     interestedInTour: number;
+    interestedInSharedAirbnb: number;
     totalGuests: number;
   }> {
     try {
@@ -165,12 +193,14 @@ export class FirebaseService {
       
       let needingAccommodation = 0;
       let interestedInTour = 0;
+      let interestedInSharedAirbnb = 0;
       let totalGuests = 0;
       
       allRSVPs.forEach(rsvp => {
         // Contar al organizador
         if (rsvp.needsAccommodation) needingAccommodation++;
         if (rsvp.interestedInTequilaTour) interestedInTour++;
+        if (rsvp.interestedInSharedAirbnb) interestedInSharedAirbnb++;
         totalGuests += rsvp.guests || 1;
         
         // Contar invitados adicionales en la lista
@@ -178,6 +208,7 @@ export class FirebaseService {
           rsvp.guestsList.forEach((guest: any) => {
             if (guest.needsAccommodation) needingAccommodation++;
             if (guest.interestedInTequilaTour) interestedInTour++;
+            if (guest.interestedInSharedAirbnb) interestedInSharedAirbnb++;
           });
         }
       });
@@ -186,6 +217,7 @@ export class FirebaseService {
         total: allRSVPs.length,
         needingAccommodation,
         interestedInTour,
+        interestedInSharedAirbnb,
         totalGuests,
       };
       
@@ -198,6 +230,7 @@ export class FirebaseService {
         total: 0,
         needingAccommodation: 0,
         interestedInTour: 0,
+        interestedInSharedAirbnb: 0,
         totalGuests: 0,
       };
       console.log('FirebaseService: Devolviendo estadísticas vacías');
