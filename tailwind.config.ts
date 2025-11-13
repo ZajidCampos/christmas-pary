@@ -36,6 +36,9 @@ const config: Config = {
         'pulse-border': 'pulse-border 2s ease-in-out infinite',
         'corner-glow': 'corner-glow 3s ease-in-out infinite',
         'pulse-line': 'pulse-line 2s ease-in-out infinite',
+        'bounce-subtle': 'bounce-subtle 3s ease-in-out infinite',
+        'pulse-glow-button': 'pulse-glow-button 2s ease-in-out infinite',
+        'border-pulse': 'border-pulse 2s ease-in-out infinite',
       },
       keyframes: {
         gradient: {
@@ -157,6 +160,32 @@ const config: Config = {
           '50%': { 
             opacity: '1',
             transform: 'scaleX(1)'
+          },
+        },
+        'bounce-subtle': {
+          '0%, 100%': {
+            transform: 'translateY(0) scale(1)',
+          },
+          '50%': {
+            transform: 'translateY(-5px) scale(1.05)',
+          },
+        },
+        'pulse-glow-button': {
+          '0%, 100%': {
+            'box-shadow': '0 0 20px rgba(6, 182, 212, 0.5), 0 0 40px rgba(168, 85, 247, 0.3)',
+          },
+          '50%': {
+            'box-shadow': '0 0 30px rgba(6, 182, 212, 0.8), 0 0 60px rgba(168, 85, 247, 0.5)',
+          },
+        },
+        'border-pulse': {
+          '0%, 100%': {
+            'border-color': 'rgba(6, 182, 212, 0.4)',
+            'box-shadow': '0 0 10px rgba(6, 182, 212, 0.3)',
+          },
+          '50%': {
+            'border-color': 'rgba(6, 182, 212, 1)',
+            'box-shadow': '0 0 20px rgba(6, 182, 212, 0.6)',
           },
         },
       },

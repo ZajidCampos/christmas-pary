@@ -4,6 +4,17 @@ export interface GuestInfo {
   interestedInTequilaTour: boolean;
 }
 
+export interface Ticket {
+  id: string;
+  name: string;
+  type: 'general' | 'vip' | 'premium';
+  price: number;
+  description: string;
+  features: string[];
+  benefits: string[];
+  available: boolean;
+}
+
 export interface RSVP {
   id: string;
   name: string;

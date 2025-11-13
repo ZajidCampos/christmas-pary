@@ -59,33 +59,28 @@ export default function Hero({ event }: HeroProps) {
           </div>
         </div>
 
-        <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-black mb-4 md:mb-6 tracking-tighter px-4 relative drop-shadow-[0_0_50px_rgba(0,0,0,0.9)]">
-          <span className="bg-gradient-to-r from-cyan-400 via-purple-400 to-pink-400 bg-clip-text text-transparent animate-gradient-x drop-shadow-[0_0_30px_rgba(6,182,212,0.5)] [text-shadow:_0_4px_20px_rgb(0_0_0_/_80%)]">
-            {event.title}
-          </span>
-          {/* Glitch effect overlay */}
-          <span className="absolute inset-0 bg-gradient-to-r from-cyan-400 via-purple-400 to-pink-400 bg-clip-text text-transparent opacity-70 animate-glitch-1"
-            aria-hidden="true">
+        <h1 className="text-[2.50rem] sm:text-[2.90rem] md:text-[4.9rem] lg:text-[6rem] font-black mb-4 md:mb-6 tracking-tighter px-4 relative leading-none">
+          <span className="bg-gradient-to-r from-cyan-400 via-purple-400 to-pink-400 bg-clip-text text-transparent animate-gradient-x drop-shadow-[0_0_30px_rgba(6,182,212,0.5)] block leading-none">
             {event.title}
           </span>
         </h1>
 
-        <p className="text-xl md:text-2xl lg:text-3xl text-purple-300 font-light mb-6 md:mb-8 tracking-wide px-4 animate-fade-in-up bg-black/30 py-2 rounded-lg backdrop-blur-sm inline-block">
+        <p className="text-base md:text-xl lg:text-2xl text-purple-300 font-light mb-6 md:mb-8 tracking-wide px-4 animate-fade-in-up bg-black/40 py-3 rounded-lg backdrop-blur-sm max-w-2xl mx-auto leading-relaxed">
           {event.subtitle}
         </p>
 
         <div className="flex flex-col md:flex-row items-center justify-center gap-2 md:gap-4 mb-8 md:mb-12 px-4 animate-fade-in-up bg-black/40 py-4 rounded-xl backdrop-blur-sm" style={{ animationDelay: '0.2s' }}>
-          <div className="flex items-center gap-2 text-cyan-400 font-mono text-sm md:text-base py-2 hover:scale-110 transition-transform">
+          <div className="flex items-center gap-2 text-cyan-400 font-mono text-sm md:text-base py-2 animate-bounce-subtle">
             <span className="text-pink-500 animate-pulse">●</span>
             <span>{formattedDate}</span>
           </div>
           <span className="hidden md:inline text-purple-500">|</span>
-          <div className="flex items-center gap-2 text-cyan-400 font-mono text-sm md:text-base py-2 hover:scale-110 transition-transform">
+          <div className="flex items-center gap-2 text-cyan-400 font-mono text-sm md:text-base py-2 animate-bounce-subtle" style={{ animationDelay: '0.2s' }}>
             <span className="text-pink-500 animate-pulse" style={{ animationDelay: '0.5s' }}>●</span>
             <span>20:00 - 04:00</span>
           </div>
           <span className="hidden md:inline text-purple-500">|</span>
-          <div className="flex items-center gap-2 text-cyan-400 font-mono text-sm md:text-base py-2 hover:scale-110 transition-transform">
+          <div className="flex items-center gap-2 text-cyan-400 font-mono text-sm md:text-base py-2 animate-bounce-subtle" style={{ animationDelay: '0.4s' }}>
             <span className="text-pink-500 animate-pulse" style={{ animationDelay: '1s' }}>●</span>
             <span>Zapopan, JAL</span>
           </div>
@@ -98,18 +93,18 @@ export default function Hero({ event }: HeroProps) {
         <div className="flex flex-col sm:flex-row gap-3 md:gap-4 justify-center items-center px-4 animate-fade-in-up" style={{ animationDelay: '0.6s' }}>
           <a
             href="#rsvp"
-            className="w-full sm:w-auto group relative px-6 md:px-8 py-3 md:py-4 bg-gradient-to-r from-cyan-100 to-purple-200 text-black font-bold text-base md:text-lg rounded-xl overflow-hidden transition-all hover:scale-105 hover:shadow-[0_0_40px_rgba(6,182,212,0.6)] animate-pulse-border"
+            className="w-full sm:w-auto group relative px-6 md:px-8 py-3 md:py-4 bg-gradient-to-r from-cyan-200 to-purple-200 text-black font-bold text-base md:text-lg rounded-xl overflow-hidden transition-all active:scale-95 shadow-lg animate-pulse-glow-button"
           >
             <span className="relative z-10">CONFIRMAR ASISTENCIA</span>
-            <div className="absolute inset-0 bg-gradient-to-r from-white to-purple-400 opacity-0 group-hover:opacity-100 transition-opacity"></div>
-            <div className="absolute inset-0 opacity-30 group-hover:opacity-50 transition-opacity">
+            <div className="absolute inset-0 bg-gradient-to-r from-purple-200 to-white opacity-0 group-active:opacity-100 transition-opacity"></div>
+            <div className="absolute inset-0 opacity-30">
               <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white to-transparent animate-shimmer"></div>
             </div>
           </a>
 
           <a
             href="#schedule"
-            className="w-full sm:w-auto px-6 md:px-8 py-3 md:py-4 border-2 border-cyan-400 text-cyan-400 font-bold text-base md:text-lg rounded-xl hover:bg-cyan-400/10 transition-all"
+            className="w-full sm:w-auto px-6 md:px-8 py-3 md:py-4 border-2 border-cyan-400 text-cyan-400 font-bold text-base md:text-lg rounded-xl active:bg-cyan-400/20 transition-all animate-border-pulse"
           >
             VER HORARIOS
           </a>

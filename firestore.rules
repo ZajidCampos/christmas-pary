@@ -1,0 +1,17 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Reglas para la colección de RSVPs
+    match /rsvps/{rsvpId} {
+      // Permitir lectura a todos
+      allow read: if true;
+      
+      // Permitir escritura solo para crear nuevos documentos
+      allow create: if true;
+      
+      // Permitir actualización y eliminación solo si eres el dueño
+      allow update, delete: if false;
+    }
+  }
+}
