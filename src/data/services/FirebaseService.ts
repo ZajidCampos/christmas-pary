@@ -268,4 +268,45 @@ export class FirebaseService {
       return false;
     }
   }
+
+  /**
+   * Obtener un RSVP por correo (primer documento que coincida)
+   */
+  async getRSVPByEmail(email: string): Promise<any | null> {
+    try {
+      const q = query(
+        collection(db, this.rsvpCollection),
+        where('email', '==', email.toLowerCase())
+      );
+
+      const querySnapshot = await getDocs(q);
+      if (querySnapshot.empty) return null;
+
+      const docSnap = querySnapshot.docs[0];
+      return { id: docSnap.id, ...docSnap.data() };
+    } catch (error) {
+      console.error('Error al obtener RSVP por email:', error);
+      return null;
+    }
+  }
+
+  /**
+   * Obtener todos los RSVPs que comparten un mismo número de habitación (room_number)
+   */
+  async getRSVPsByRoomNumber(roomNumber: number): Promise<any[]> {
+    try {
+      const q = query(
+        collection(db, this.rsvpCollection),
+        where('room_number', '==', roomNumber)
+      );
+
+      const querySnapshot = await getDocs(q);
+      const rsvps: any[] = [];
+      querySnapshot.forEach((doc) => rsvps.push({ id: doc.id, ...doc.data() }));
+      return rsvps;
+    } catch (error) {
+      console.error('Error al obtener RSVPs por room_number:', error);
+      return [];
+    }
+  }
 }

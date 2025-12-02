@@ -3,6 +3,7 @@ import ConfirmedGallery from '../../ui/components/ConfirmedGalleryClientWrapper'
 import Location from '../../src/ui/components/Location'
 import ConfirmedHero from '../../src/ui/components/ConfirmedHero'
 import Footer from '../../src/ui/components/Footer'
+import RoomLookupCard from '../../src/ui/components/RoomLookupCard'
 
 export const metadata = {
   title: 'Detalles Confirmados - Fiesta',
@@ -194,6 +195,10 @@ export default function DetallesConfirmadosPage() {
   <section id="gallery" className="mb-10">
           <ConfirmedGallery images={images} />
         </section>
+
+        <div className="mb-10">
+          <RoomLookupCard />
+        </div>
 
       </section>
   <Footer variant="detalles" />

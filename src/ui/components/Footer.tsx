@@ -77,7 +77,7 @@ export default function Footer({ variant = 'home' }: FooterProps) {
             <h4 className="text-lg font-bold text-white mb-4">CONECTA</h4>
             <div className="space-y-3 mb-4">
               <a
-                href="https://wa.me/5233339126481"
+                href="https://wa.me/523339126481"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center gap-3 text-gray-400 hover:text-cyan-400 transition-colors text-sm group"
@@ -106,7 +106,7 @@ export default function Footer({ variant = 'home' }: FooterProps) {
                 <Headphones className="w-5 h-5 text-gray-400 group-hover:text-cyan-400 transition-colors" />
               </a>
               <a
-                href="https://wa.me/5233339126481"
+                href="https://wa.me/523339126481"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="w-10 h-10 bg-black/50 border border-cyan-500/30 hover:border-cyan-500 hover:bg-cyan-500/10 flex items-center justify-center transition-all hover:scale-110 group"
