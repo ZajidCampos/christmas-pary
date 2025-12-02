@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import RSVPForm from './RSVPForm';
+import CityStats from './CityStats';
 import { AttendeeInfo } from '../../domain/entities/AttendeeInfo';
 import { FirebaseService } from '../../data/services/FirebaseService';
 
@@ -106,6 +107,11 @@ export default function RSVPSection({ attendeeInfo }: RSVPSectionProps) {
               {percentageFilled.toFixed(0)}% de invitados confirmados
             </p>
           </div>
+        </div>
+
+        {/* City Stats - Estadísticas de ciudades */}
+        <div className="max-w-2xl mx-auto mb-12">
+          <CityStats />
         </div>
 
         {/* Form */}

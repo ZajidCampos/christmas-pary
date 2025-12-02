@@ -1,7 +1,40 @@
+'use client';
+
+import { MouseEvent } from 'react';
 import { MessageCircle, Music, Headphones, Smartphone } from 'lucide-react';
 
-export default function Footer() {
+type FooterProps = {
+  variant?: 'home' | 'detalles';
+};
+
+export default function Footer({ variant = 'home' }: FooterProps) {
   const currentYear = new Date().getFullYear();
+
+  // Define navigation links depending on page variant
+  const navLinks =
+    variant === 'detalles'
+      ? [
+          { label: 'Galería', href: '#gallery' },
+          { label: 'Ubicación', href: '#location' },
+        ]
+      : [
+          { label: 'Horarios', href: '#schedule' },
+          { label: 'Confirmar Asistencia', href: '#rsvp' },
+          { label: 'Ubicación', href: '#location' },
+        ];
+
+  const handleAnchorClick = (e: MouseEvent<HTMLAnchorElement>, href: string) => {
+    if (href.startsWith('#')) {
+      e.preventDefault();
+      const id = href.slice(1);
+      const el = document.getElementById(id);
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        // Update the hash without jumping
+        history.replaceState(null, '', href);
+      }
+    }
+  };
 
   return (
     <footer className="bg-black border-t border-cyan-500/30 py-12 relative overflow-hidden">
@@ -25,21 +58,17 @@ export default function Footer() {
           <div>
             <h4 className="text-lg font-bold text-white mb-4">NAVEGACIÓN</h4>
             <ul className="space-y-2">
-              <li>
-                <a href="#schedule" className="text-gray-400 hover:text-cyan-400 transition-colors text-sm">
-                  Horarios
-                </a>
-              </li>
-              <li>
-                <a href="#rsvp" className="text-gray-400 hover:text-cyan-400 transition-colors text-sm">
-                  Confirmar Asistencia
-                </a>
-              </li>
-              <li>
-                <a href="#" className="text-gray-400 hover:text-cyan-400 transition-colors text-sm">
-                  Ubicación
-                </a>
-              </li>
+              {navLinks.map((link) => (
+                <li key={link.href}>
+                  <a
+                    href={link.href}
+                    onClick={(e) => handleAnchorClick(e as any, link.href)}
+                    className="text-gray-400 hover:text-cyan-400 transition-colors text-sm"
+                  >
+                    {link.label}
+                  </a>
+                </li>
+              ))}
             </ul>
           </div>
 

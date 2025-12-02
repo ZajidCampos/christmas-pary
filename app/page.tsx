@@ -23,8 +23,8 @@ export default function Home() {
       <Schedule schedule={schedule} />
       <TequilaTour />
       <Location location={location} />
-      <RSVPSection attendeeInfo={attendeeInfo} />
-      <Footer />
+  <RSVPSection attendeeInfo={attendeeInfo} />
+  <Footer variant="home" />
     </div>
   );
 }

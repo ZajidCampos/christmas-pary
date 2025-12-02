@@ -197,13 +197,26 @@ export class FirebaseService {
       let totalGuests = 0;
       
       allRSVPs.forEach(rsvp => {
-        // Contar al organizador
+        // Contar flags por el organizador
         if (rsvp.needsAccommodation) needingAccommodation++;
         if (rsvp.interestedInTequilaTour) interestedInTour++;
         if (rsvp.interestedInSharedAirbnb) interestedInSharedAirbnb++;
-        totalGuests += rsvp.guests || 1;
-        
-        // Contar invitados adicionales en la lista
+
+        // Calcular número real de asistentes para este RSVP.
+        // Priorizar la lista explícita `guestsList` si existe (1 + length),
+        // en caso contrario usar `rsvp.guests` si está presente, o 1 por defecto.
+        let guestsCount = 0;
+        if (rsvp.guestsList && Array.isArray(rsvp.guestsList) && rsvp.guestsList.length > 0) {
+          guestsCount = 1 + rsvp.guestsList.length; // organizador + invitados listados
+        } else if (typeof rsvp.guests === 'number') {
+          guestsCount = rsvp.guests;
+        } else {
+          guestsCount = 1;
+        }
+
+        totalGuests += guestsCount;
+
+        // Contar flags dentro de guestsList (invitados adicionales)
         if (rsvp.guestsList && Array.isArray(rsvp.guestsList)) {
           rsvp.guestsList.forEach((guest: any) => {
             if (guest.needsAccommodation) needingAccommodation++;
