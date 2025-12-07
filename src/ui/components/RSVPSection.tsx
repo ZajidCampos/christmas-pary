@@ -29,7 +29,7 @@ export default function RSVPSection({ attendeeInfo }: RSVPSectionProps) {
       const firebaseStats = await firebaseService.getRSVPStats();
       
       // Calcular espacios de hospedaje disponibles
-      const accommodationAvailable = Math.max(0, 12 - firebaseStats.needingAccommodation);
+      const accommodationAvailable = Math.max(0, 15 - firebaseStats.needingAccommodation);
       
       setStats({
         confirmed: firebaseStats.totalGuests, // Total de personas (no RSVPs)

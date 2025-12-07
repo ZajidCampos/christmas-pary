@@ -76,12 +76,13 @@ export default function Schedule({ schedule }: ScheduleProps) {
               <div className="w-2 h-2 bg-pink-500 rounded-full animate-pulse delay-150"></div>
             </div>
             <span className="text-cyan-400 font-mono text-sm md:text-base">
-              8 HORAS DE FIESTA | 20:00 → 04:00
+              20 HORAS DE FIESTA | 20:00 → 16:00
             </span>
           </div>
           
-          <div className="mt-6 text-gray-400 text-sm">
-            <p className="font-mono">🎵 Minimal → House → Techno</p>
+          <div className="mt-6 text-gray-400 text-sm space-y-2">
+            <p className="font-mono">🎵 8 horas de Techno: Minimal → House → Techno</p>
+            <p className="font-mono text-xs">Después música chill y ambiente para descansar</p>
           </div>
         </div>
       </div>

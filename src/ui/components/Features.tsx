@@ -32,8 +32,8 @@ export default function Features({}: FeaturesProps) {
     },
     {
       icon: '🏠',
-      title: 'HOSPEDAJE EN CASA DEL HOST',
-      description: 'Para personas de otra ciudad. Cupo limitado para 8 personas',
+      title: 'HABITACIONES PARA DESCANSAR',
+      description: 'Habitaciones disponibles para todos los invitados. La fiesta dura 20 horas',
       color: 'purple',
       gradient: 'from-purple-500/10 to-purple-500/5',
     },

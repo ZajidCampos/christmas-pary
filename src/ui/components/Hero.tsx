@@ -77,7 +77,7 @@ export default function Hero({ event }: HeroProps) {
           <span className="hidden md:inline text-purple-500">|</span>
           <div className="flex items-center gap-2 text-cyan-400 font-mono text-sm md:text-base py-2 animate-bounce-subtle" style={{ animationDelay: '0.2s' }}>
             <span className="text-pink-500 animate-pulse" style={{ animationDelay: '0.5s' }}>●</span>
-            <span>20:00 - 04:00</span>
+            <span>20:00 - 16:00 (+1)</span>
           </div>
           <span className="hidden md:inline text-purple-500">|</span>
           <div className="flex items-center gap-2 text-cyan-400 font-mono text-sm md:text-base py-2 animate-bounce-subtle" style={{ animationDelay: '0.4s' }}>
